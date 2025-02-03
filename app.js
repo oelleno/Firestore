@@ -2,6 +2,7 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
+
 // 🔹 Firebase 설정 (본인 프로젝트 정보 입력!)
 const firebaseConfig = {
     apiKey: "AIzaSyAxlXZTfOgO4ZrIfXp4t6sAjArTmMQrwuQ",
@@ -31,6 +32,7 @@ document.getElementById("info-form").addEventListener("submit", async function(e
 
     try {
         // Firestore에 데이터 저장
+        const userId = "everyone"; // 원하는 문서 ID
         await addDoc(collection(db, "users"), {
             name: name,
             phone: phone,
