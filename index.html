@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>이미지 업로드</title>
     <style>
+        /* 기존 스타일 유지 */
         * {
             margin: 0;
             padding: 0;
@@ -95,6 +96,24 @@
                 transform: rotate(360deg);
             }
         }
+
+        .download-button {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 980px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin-top: 20px;
+            display: none; /* 처음에는 숨겨짐 */
+        }
+
+        .download-button:hover {
+            background-color: #218838;
+        }
     </style>
 </head>
 <body>
@@ -124,6 +143,9 @@
         <div id="loading" style="display:none; text-align:center;">
             <div class="spinner-border"></div>
         </div>
+
+        <!-- 다운로드 버튼 -->
+        <a id="downloadLink" class="download-button" download>이미지 다운로드</a>
     </div>
 
     <script type="module">
@@ -172,6 +194,11 @@
                 
                 // 업로드 완료 알림
                 alert('이미지가 성공적으로 업로드되었습니다!');
+
+                // 다운로드 링크 표시
+                const downloadLink = document.getElementById("downloadLink");
+                downloadLink.href = downloadURL;
+                downloadLink.style.display = "block"; // 다운로드 버튼을 보이게
 
             } catch (error) {
                 alert('업로드 중 오류가 발생했습니다.');
