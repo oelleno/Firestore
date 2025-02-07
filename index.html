@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>이미지 업로드</title>
     <style>
-        /* 기존 스타일 유지 */
+        /* 기존 스타일 */
         * {
             margin: 0;
             padding: 0;
@@ -97,22 +97,14 @@
             }
         }
 
-        .download-button {
-            background-color: #28a745;
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 980px;
-            font-size: 14px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            width: 100%;
+        /* QR 코드 */
+        .qr-container {
             margin-top: 20px;
-            display: none; /* 처음에는 숨겨짐 */
+            text-align: center;
         }
 
-        .download-button:hover {
-            background-color: #218838;
+        #qrCode {
+            margin-top: 20px;
         }
     </style>
 </head>
@@ -126,16 +118,6 @@
             </label>
             <input type="file" id="fileInput" accept="image/jpeg" class="d-none" onchange="showFileName(this)">
         </div>
-        <script>
-            function showFileName(input) {
-                const fileNameDisplay = document.getElementById('fileNameDisplay');
-                if (input.files && input.files[0]) {
-                    fileNameDisplay.textContent = input.files[0].name;
-                } else {
-                    fileNameDisplay.textContent = '이미지를 드래그하거나 클릭하여 선택하세요';
-                }
-            }
-        </script>
 
         <img id="uploadedImage" class="preview" style="display:none" alt="미리보기">
         <button onclick="uploadImage()" class="upload-button">업로드</button>
@@ -144,8 +126,10 @@
             <div class="spinner-border"></div>
         </div>
 
-        <!-- 다운로드 버튼 -->
-        <a id="downloadLink" class="download-button" download>이미지 다운로드</a>
+        <div class="qr-container" id="qrContainer" style="display:none;">
+            <h3>QR 코드 스캔으로 다운로드</h3>
+            <div id="qrCode"></div>
+        </div>
     </div>
 
     <script type="module">
@@ -158,7 +142,7 @@
             apiKey: "AIzaSyAxlXZTfOgO4ZrIfXp4t6sAjArTmMQrwuQ",
             authDomain: "fitgirlviki.firebaseapp.com",
             projectId: "fitgirlviki",
-            storageBucket: "fitgirlviki.firebasestorage.app", // ✅ 최종 확정 도메인
+            storageBucket: "fitgirlviki.firebasestorage.app",
             messagingSenderId: "207468197936",
             appId: "1:207468197936:web:70ea3baa845e40372255f5"
         };
@@ -187,18 +171,16 @@
                 const downloadURL = await getDownloadURL(storageRef);
                 console.log("파일 다운로드 URL:", downloadURL);
 
-                // 이미지 태그에 다운로드된 이미지 표시
+                // 업로드 완료 후 이미지 표시
                 const uploadedImage = document.getElementById("uploadedImage");
                 uploadedImage.src = downloadURL;
                 uploadedImage.style.display = "block";
                 
+                // 다운로드용 QR 코드 생성
+                generateQRCode(downloadURL);
+
                 // 업로드 완료 알림
                 alert('이미지가 성공적으로 업로드되었습니다!');
-
-                // 다운로드 링크 표시
-                const downloadLink = document.getElementById("downloadLink");
-                downloadLink.href = downloadURL;
-                downloadLink.style.display = "block"; // 다운로드 버튼을 보이게
 
             } catch (error) {
                 alert('업로드 중 오류가 발생했습니다.');
@@ -207,6 +189,24 @@
                 document.getElementById('loading').style.display = 'none';
             }
         };
+
+        // QR 코드 생성 함수
+        function generateQRCode(url) {
+            const qrContainer = document.getElementById('qrContainer');
+            qrContainer.style.display = 'block';
+            
+            const qrCode = new QRCode(document.getElementById("qrCode"), {
+                text: url, // 다운로드 URL을 QR 코드로 생성
+                width: 128,
+                height: 128,
+                colorDark: "#000000",
+                colorLight: "#ffffff",
+                correctLevel: QRCode.CorrectLevel.H
+            });
+        }
     </script>
+
+    <!-- QR 코드 라이브러리 추가 -->
+    <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
 </body>
 </html>
